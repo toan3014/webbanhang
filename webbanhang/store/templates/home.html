@@ -1,0 +1,111 @@
+{% extends 'main.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}Trang Chủ{% endblock %}
+{% block home_content %}
+<div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
+    <!-- Carousel indicators -->
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+
+    <!-- Carousel items -->
+    <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="{% static 'images/banner1.jpg' %}" class="d-block w-100" alt="Banner 1">
+          </div>
+          <div class="carousel-item">
+            <img src="{% static 'images/banner2.jpg' %}" class="d-block w-100" alt="Banner 2">
+          </div>
+          <div class="carousel-item">
+            <img src="{% static 'images/banner3.jpg' %}" class="d-block w-100" alt="Banner 3">
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+
+    <!-- Carousel controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    </button>
+</div>
+<div class="main-content row">
+    {% for product in products %}
+        <div class="col-md-4 product">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid">
+            {% else %}
+                <img src="{% static 'images/default.jpg' %}" alt="Ảnh mặc định" class="img-fluid">
+            {% endif %}
+            
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.description }}</p>
+            <p><strong>Giá: {{ product.price|floatformat:0|intcomma }} VND</strong></p>
+            
+            <div class="d-flex align-items-center mb-3">
+                <!-- Label "Số lượng" nằm bên trái và ô nhập bên phải -->
+            </div>
+            
+            <div class="d-flex justify-content-between">
+                <button data-product="{{ product.id }}" data-action="add" class="btn btn-outline-secondary add-btn update-cart">
+                    <a href="{% url 'product_detail' product.id %}" class="text-decoration-none text-dark">Xem Chi Tiết</a>
+                </button>
+                
+                <!-- Thêm vào Giỏ Hàng -->
+                <button type="button" class="btn btn-outline-secondary add-cart-btn" data-product-id="{{ product.id }}" data-product-qty="{{ product.id }}" style="background-color: #28a745; color: white; border-color: #28a745;">
+                    Thêm vào Giỏ Hàng
+                </button>
+            </div>
+        </div>
+    {% empty %}
+        <p>Không có sản phẩm trong danh mục này.</p>
+    {% endfor %}
+</div>
+
+<script>
+    $(document).on('click', '.add-cart-btn', function(e) {
+        e.preventDefault();
+        
+        // Lấy ID sản phẩm
+        var productId = $(this).data('product-id');
+        
+        // Lấy số lượng từ ô nhập. Nếu người dùng xoá số lượng, mặc định là 1
+        var productQty = $('#typeNumber' + productId).val();
+        if (!productQty || productQty < 1) {
+            productQty = 1;  // Đảm bảo số lượng luôn >= 1
+        }
+  
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'cart_add' %}",
+            data: {
+                product_id: productId,
+                product_qty: productQty,
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+                action: 'post'
+            },
+            success: function(response) {
+                console.log(response); // Kiểm tra phản hồi JSON từ máy chủ
+                // Cập nhật giỏ hàng trên giao diện
+                $('#cart_quantity').text(response.qty);
+            },
+            error: function(xhr, errmsg, err) {
+                console.error("Error: " + errmsg);
+            }
+        });
+    });
+</script>
+{% endblock home_content %}

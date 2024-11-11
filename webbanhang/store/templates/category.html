@@ -1,0 +1,136 @@
+{% extends 'main.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}Sản phẩm{% endblock %}
+{% block home_content %}
+<div class="main-content row">
+    {% if category %}
+        <h2>Danh Sách Sản Phẩm - {{ category }}</h2>
+    {% else %}
+        <h2>Danh Sách Sản Phẩm</h2>
+    {% endif %}
+    
+    {% for product in products %}
+        <div class="col-md-4 product">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid">
+            {% else %}
+                <img src="{% static 'images/default.jpg' %}" alt="Ảnh mặc định" class="img-fluid">
+            {% endif %}
+            
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.description }}</p>
+            <p><strong>Giá: {{ product.price|floatformat:0|intcomma }} VND</strong></p>
+            
+            <select class="form-select form-select-sm" id="qty-cart">
+                <!-- Các lựa chọn mặc định khác (nếu có) -->
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+            </select>
+            <div class="d-flex justify-content-between">
+                <button data-product="{{ product.id }}" data-action="add" class="btn btn-outline-secondary add-btn update-cart">
+                    <a href="{% url 'product_detail' product.id %}" class="text-decoration-none text-dark">Xem Chi Tiết</a>
+                </button>
+                
+                <!-- Thêm vào Giỏ Hàng -->
+                <button type="button" class="btn btn-outline-secondary add-cart-btn" data-product-id="{{ product.id }}" data-product-qty="{{ product.id }}" style="background-color: #28a745; color: white; border-color: #28a745;">
+                    Thêm vào Giỏ Hàng
+                </button>
+            </div>
+        </div>
+    {% empty %}
+        <p>Không có sản phẩm trong danh mục này.</p>
+    {% endfor %}
+</div>
+<script>
+    $(document).on('click', '.add-cart-btn', function(e) {
+        e.preventDefault();
+        
+        // Lấy ID và số lượng của sản phẩm
+        var productId = $(this).data('product-id');
+        var productQty = $('#typeNumber' + productId).val();
+  
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'cart_add' %}",
+            data: {
+                product_id: productId,
+                product_qty: productQty,
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+                action: 'post'
+            },
+            success: function(response) {
+                console.log(response); // Kiểm tra phản hồi JSON từ máy chủ
+                // Cập nhật giỏ hàng trên giao diện
+                $('#cart_quantity').text(response.qty);
+            },
+            error: function(xhr, errmsg, err) {
+                console.error("Error: " + errmsg);
+            }
+        });
+    });
+  </script>
+<script>
+    $(document).on('click', '.add-cart-btn', function(e) {
+        e.preventDefault();
+        
+        // Lấy ID và số lượng của sản phẩm
+        var productId = $(this).data('product-id');
+        var productQty = $('#typeNumber' + productId).val();
+  
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'cart_add' %}",
+            data: {
+                product_id: productId,
+                product_qty: productQty,
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+                action: 'post'
+            },
+            success: function(response) {
+                console.log(response); // Kiểm tra phản hồi JSON từ máy chủ
+                // Cập nhật giỏ hàng trên giao diện
+                $('#cart_quantity').text(response.qty);
+            },
+            error: function(xhr, errmsg, err) {
+                console.error("Error: " + errmsg);
+            }
+        });
+    });
+  </script>
+<script>
+    $(document).on('click', '.add-cart-btn', function(e) {
+        e.preventDefault();
+        
+        // Lấy ID và số lượng của sản phẩm
+        var productId = $(this).data('product-id');
+        var productQty = $('#qty-cart').val(); // Lấy giá trị (value) của ô chọn số lượng
+        
+        // Kiểm tra nếu ID hoặc số lượng không hợp lệ
+        if (!productId || !productQty || productQty < 1) {
+            alert('Vui lòng chọn số lượng hợp lệ.');
+            return;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'cart_add' %}",
+            data: {
+                product_id: productId,
+                product_qty: productQty,
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+                action: 'post'
+            },
+            success: function(response) {
+                console.log(response); // Kiểm tra phản hồi JSON từ máy chủ
+                // Cập nhật giỏ hàng trên giao diện
+                $('#cart_quantity').text(response.qty); // Giả sử response.qty là số lượng giỏ hàng
+            },
+            error: function(xhr, errmsg, err) {
+                console.error("Error: " + errmsg);
+            }
+        });
+    });
+</script>
+{% endblock home_content %}

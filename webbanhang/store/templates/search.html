@@ -1,0 +1,89 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block title %}Tìm Kiếm{% endblock %}
+{% load humanize %}
+{% block content %}
+<h1>Tìm kiếm {{searched}}</h1>
+{% if searched %}
+   <div class="row">
+       {% for product in key %}
+           <div class="col-md-3 product">
+               {% if product.image %}
+                   <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid">
+               {% else %}
+                   <img src="{% static 'images/default.jpg' %}" alt="Ảnh mặc định" class="img-fluid">
+               {% endif %}
+               
+               <h3>{{ product.name }}</h3>
+               <p>{{ product.description }}</p>
+               <p><strong>Giá: {{ product.price|floatformat:0|intcomma }} VND</strong></p>   
+               <div class="d-flex justify-content-between">
+                   <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-secondary text-decoration-none text-dark">Xem Chi Tiết</a>
+                   
+                   <button type="button" class="btn btn-outline-secondary add-cart-btn" data-product-id="{{ product.id }}" style="background-color: #28a745; color: white; border-color: #28a745;">
+                       Thêm vào Giỏ Hàng
+                   </button>
+               </div>
+           </div>
+       {% empty %}
+           <p>Không có sản phẩm trong danh mục này.</p>
+       {% endfor %}
+   </div>
+{% else %}
+   <h1>Bạn quên nhập từ tìm kiếm</h1>
+{% endif %}
+
+<script>
+    $(document).ready(function() {
+        // Cài đặt token CSRF cho tất cả các yêu cầu Ajax
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const csrftoken = getCookie('csrftoken');
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!/^(GET|HEAD|OPTIONS|TRACE)$/.test(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+        // Thêm vào giỏ hàng
+        $(document).on('click', '.add-cart-btn', function(e) {
+            e.preventDefault();
+
+            var productId = $(this).data('product-id');
+            var productQty = 1;  // Mặc định số lượng là 1, hoặc có thể tùy chỉnh
+
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'cart_add' %}",
+                data: {
+                    product_id: productId,
+                    product_qty: productQty,
+                    action: 'post'
+                },
+                success: function(response) {
+                    console.log(response);
+                    $('#cart_quantity').text(response.qty);  // Cập nhật số lượng giỏ hàng
+                },
+                error: function(xhr, errmsg, err) {
+                    console.error("Error: " + errmsg);
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'main.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}Giỏ Hàng{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h3>Giỏ Hàng Của Bạn</h3>
+    
+    {% if cart_products %}
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Hình Ảnh</th>
+                    <th scope="col">Giá</th>
+                    <th scope="col">Số Lượng</th>
+                    <th scope="col">Xóa</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in cart_products %}
+                <tr>
+                    <td>
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid" width="50">
+                    </td>
+                    <td>{{ product.price|floatformat:0|intcomma }} VND</td>
+                    <td>
+                        <select class="form-select form-select-sm" id="qty-cart">
+                            {% for key, value in quantites.items %}
+                                {% if key == product.id|slugify %}
+                                    <option selected>{{ value }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        
+                            <!-- Các lựa chọn mặc định khác (nếu có) -->
+                            <option value="1">One</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                        </select>
+                    </td>
+                    <td>
+                        <button type="button" data-index="{{ product.id }}" class="btn btn-danger delete-product">Xóa</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="d-flex justify-content-between mt-3">
+        <h5>Tổng Tiền: {{ totals|floatformat:0|intcomma }} VND</h5>
+    </div>
+    {% else %}
+        <p>Giỏ hàng của bạn hiện tại chưa có sản phẩm nào.</p>
+    {% endif %}
+</div>
+
+<script>
+    $(document).on('click', '.delete-product', function(e) {
+        e.preventDefault();
+        
+        var productId = $(this).data('index');  // Lấy ID sản phẩm từ data-index
+        
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'cart_delete' %}",  // URL để gọi hàm xóa sản phẩm
+            data: {
+                product_id: productId,  // Gửi ID sản phẩm
+                csrfmiddlewaretoken: "{{ csrf_token }}",  // Đảm bảo gửi token bảo mật
+                action: 'post'  // Chỉ định hành động là "post"
+            },
+            success: function(response) {
+                location.reload();  // Tải lại trang sau khi xóa sản phẩm khỏi giỏ
+            },
+            error: function(xhr, errmsg, err) {
+                console.error("Error: " + errmsg);  // Hiển thị lỗi nếu có sự cố trong quá trình gửi yêu cầu
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block title %}Đăng Ký{% endblock %}
+
+{% block login_content %}
+<div class="login-container">
+    <h2>Đăng Ký Tài Khoản</h2>
+    <form method="post">
+               {% csrf_token %}
+               {{ form.as_p }}
+               <button type="submit" class="btn btn-primary">Sign Up</button>
+     </form>
+</div>
+{% endblock login_content %}

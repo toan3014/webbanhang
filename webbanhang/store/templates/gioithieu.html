@@ -1,0 +1,17 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block title %}Giới Thiệu{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Tiêu đề lớn -->
+    <div class="text-center mb-4">
+        <h1 class="display-3">ĐỒ ÁN PYTHON NÂNG CAO</h1>
+    </div>
+
+    <!-- Hình ảnh giới thiệu về công ty -->
+    <div class="text-center">
+        <img src="{% static 'images/about.jpg' %}" alt="Giới Thiệu Về Chúng Tôi" class="img-fluid rounded" style="max-width: 100%; height: auto;">
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,254 @@
+/* Global Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    min-height: 100vh;  /* Đảm bảo chiều cao tối thiểu 100% viewport */
+    padding-bottom: 80px; /* Tạo khoảng cách dưới cùng cho footer */
+}
+
+/* Header */
+header {
+    background-image: url('https://cdn.vectorstock.com/i/500p/91/98/shopping-online-with-discount-conceptual-banner-vector-47519198.jpg');
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    padding: 120px 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    height: 350px;
+    position: relative;
+}
+
+header h1 {
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+header p {
+    font-size: 1.2rem;
+    font-weight: 300;
+}
+
+/* Navbar */
+nav {
+    background-color: #ff4b5c;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+nav a {
+    color: #fff;
+    padding: 16px 25px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 18px;
+    font-weight: 600;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+nav a:hover {
+    background-color: #f8f9fa;
+    color: #ff4b5c;
+}
+
+/* Main Content */
+.main-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 40px auto;
+    padding: 0 20px;
+    max-width: 1200px;
+    flex-grow: 1;
+}
+
+/* Product Card */
+.product {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 20px;
+    width: calc(33.333% - 20px); /* Adjusted for 3 products per row */
+    text-align: center;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Stronger hover shadow */
+}
+
+.product img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+/* Product Title and Description */
+.product h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.product p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+/* Buttons */
+.product button {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 10px 0;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.product button:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+/* Form for "View Product" Button */
+.product form {
+    display: inline-block;
+}
+
+.product form button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    border: none;
+    margin: 10px 0;
+}
+
+.product form button:hover {
+    background-color: #0056b3;
+}
+
+/* Footer */
+footer {
+    background-color: #343a40;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+}
+
+footer p {
+    font-size: 14px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .main-content {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .product {
+        width: calc(50% - 20px); /* Two products per row */
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    header {
+        padding: 60px 20px;
+        height: auto;
+        font-size: 28px;
+    }
+
+    nav a {
+        font-size: 16px;
+        padding: 14px 20px;
+    }
+
+    .main-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .product {
+        width: 90%; /* Single column on smaller screens */
+        margin-bottom: 20px;
+    }
+
+    .product button {
+        width: 100%; /* Full width button on smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 2rem;
+    }
+
+    .product h3 {
+        font-size: 1.2rem;
+    }
+
+    .product p {
+        font-size: 0.9rem;
+    }
+
+    .product button {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+
+    footer p {
+        font-size: 12px;
+    }
+}
+
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000; /* Đảm bảo navbar luôn ở trên cùng */
+    padding: 5px 20px;  /* Điều chỉnh padding để navbar nhỏ gọn hơn */
+}
+
+/* Giảm kích thước font của các mục menu */
+.navbar .nav-link {
+    font-size: 14px;  /* Điều chỉnh font-size để các mục menu nhỏ gọn hơn */
+}
+
+/* Thêm hiệu ứng bóng đổ khi navbar dính vào đầu trang */
+.navbar.sticky {
+    box-shadow: 0 4px 2px -2px gray;  /* Tạo hiệu ứng bóng khi navbar cố định */
+}
+
+/* Giảm kích thước logo */
+.navbar .navbar-brand img {
+    width: 80px;  /* Giảm kích thước logo để navbar nhỏ gọn hơn */
+}
+
+/* Điều chỉnh khoảng cách giữa navbar và nội dung bên dưới khi navbar là sticky */
+body {
+    padding-top: 50px;  /* Giảm khoảng cách ở đầu trang để nội dung không bị che khuất */
+}
